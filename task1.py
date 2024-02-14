@@ -4,7 +4,7 @@ import datetime
 with open('scientist.txt', encoding='utf8') as file:
     data = list(csv.DictReader(file, delimiter='#', quotechar='"'))
     swp=True
-    while swp:
+    while swp: #сортировка по дате
         swp=False
         for i in range(len(data)-1):
             x1,x2,x3 = [int(x) for x in data[i]['date'].split('-')]
@@ -14,19 +14,19 @@ with open('scientist.txt', encoding='utf8') as file:
             if d1> d2:
                 data[i], data[i+1] = data[i+1], data[i]
                 swp=True
-    original_alo = ''
-    original = {}
-    alopurinol = {}
+    original_alo = '' #оригинальный создатель аллопуринола
+    original = {} #будем записывать всех оригинальных создателей препарата
+    alopurinol = {} #те, на кого нужно отправить отчет полиции
     rows = []
     for i in range(len(data)):
         ScientistName, preparation, date, components = data[i]['ScientistName'], data[i]['preparation'],data[i]['date'],data[i]['components']
-        if preparation not in original:
+        if preparation not in original: #если нашли оригинального создателя запишем его, в противном случае пропустим
             original[f'{preparation}'] = ScientistName
-            if preparation == 'Аллопуринол':
+            if preparation == 'Аллопуринол': #создатель аллопуринола
                 original_alo = ScientistName
-            rows.append(data[i])
+            rows.append(data[i]) #запишем оригинального создателя в итоговый файл
         else:
-            if preparation == 'Аллопуринол':
+            if preparation == 'Аллопуринол': #нашли злоумышленников
                 alopurinol[f'{ScientistName}'] = date
     print('Разработчиками Аллопуринола были такие люди: ')
     for i in alopurinol:
